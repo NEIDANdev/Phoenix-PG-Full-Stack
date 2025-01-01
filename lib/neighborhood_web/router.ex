@@ -8,22 +8,31 @@ defmodule NeighborhoodWeb.Router do
     plug :put_root_layout, html: {NeighborhoodWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :snoop
   end
 
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  def snoop(conn, _) do
+    answer = ~w(Yes No Maybe)
+
+    assign(conn, :answer, Enum.random(answer))
+  end
+
   scope "/", NeighborhoodWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/tips", TipController, :index
+    get "/tip/:id", TipController, :show
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", NeighborhoodWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", NeighborhoodWeb do
+    pipe_through :api
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:neighborhood, :dev_routes) do
