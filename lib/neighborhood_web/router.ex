@@ -27,6 +27,7 @@ defmodule NeighborhoodWeb.Router do
     get "/", PageController, :home
     get "/tips", TipController, :index
     get "/tip/:id", TipController, :show
+    live "/effort", EffortLive
   end
 
   # Other scopes may use custom stacks.
